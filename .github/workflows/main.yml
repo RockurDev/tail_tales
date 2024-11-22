@@ -54,7 +54,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r ./kittygram_backend/requirements.txt
+        pip install -r ./backend/requirements.txt
     
     - name: Test with django tests
       env:
@@ -65,7 +65,7 @@ jobs:
         DB_PORT: ${{ secrets.DB_PORT }}
       
       run: |  
-        cd kittygram_backend/
+        cd backend/
         python manage.py test
 
   frontend_tests:
@@ -192,9 +192,9 @@ jobs:
           sudo docker compose -f docker-compose.production.yml down
           sudo docker compose -f docker-compose.production.yml up -d
 
-          sudo docker compose -f docker-compose.production.yml exec kittygram_backend python manage.py migrate
-          sudo docker compose -f docker-compose.production.yml exec kittygram_backend python manage.py collectstatic
-          sudo docker compose -f docker-compose.production.yml exec kittygram_backend cp -r /app/collected_static/. /backend_static/static/
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
 
   send_message:
     runs-on: ubuntu-latest
