@@ -7,12 +7,14 @@ volumes:
 
 services:
   db:
+    container_name: db
     env_file: .env
-    image: postgres:13.10
+    image: postgres:13
     volumes:
       - pg_data:/var/lib/postgresql/data
 
-  backend:
+  kittygram_backend:
+    container_name: backend
     env_file: .env
     image: rockur/kittygram_backend
     volumes:
@@ -21,14 +23,16 @@ services:
     depends_on:
       - db
 
-  frontend:
+  kittygram_frontend:
+    container_name: frontend
     env_file: .env
     image: rockur/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
 
-  gateway:
+  kittygram_gateway:
+    container_name: gateway
     env_file: .env
     image: rockur/kittygram_gateway
     volumes:
