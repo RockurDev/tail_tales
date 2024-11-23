@@ -185,9 +185,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          tree
-          
-          cd kittygram_final
+          cd kittygram
 
           sudo docker compose -f docker-compose.production.yml pull
 
