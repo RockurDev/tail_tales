@@ -167,7 +167,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v3
       
-    - name: Copy docker-compose.yml via scp
+    - name: Copy docker-compose.production.yml via scp
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -194,7 +194,7 @@ jobs:
 
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /static/static/
 
   send_message:
     runs-on: ubuntu-latest
