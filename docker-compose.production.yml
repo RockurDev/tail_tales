@@ -8,13 +8,13 @@ volumes:
 services:
   db:
     env_file: .env
-    image: postgres:13
+    image: postgres:13.10
     volumes:
       - pg_data:/var/lib/postgresql/data
 
   backend:
     env_file: .env
-    build: ./backend/
+    image: rockur/kittygram_backend
     volumes:
       - static:/static
       - media:/app/media
@@ -23,16 +23,16 @@ services:
 
   frontend:
     env_file: .env
-    build: ./frontend/
+    image: rockur/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
 
   gateway:
     env_file: .env
-    build: ./nginx/
-    ports:
-      - 9000:80
+    image: rockur/kittygram_gateway
     volumes:
       - static:/static
       - media:/media
+    ports:
+      - 9000:80
