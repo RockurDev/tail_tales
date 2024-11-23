@@ -8,7 +8,12 @@ volumes:
 services:
   db:
     container_name: db
-    env_file: .env
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
     image: postgres:13.10
     volumes:
       - pg_data:/var/lib/postgresql/data
@@ -16,10 +21,14 @@ services:
       5432:5432
     options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-
   kittygram_backend:
     container_name: backend
-    env_file: .env
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
     image: rockur/kittygram_backend
     volumes:
       - static:/static
@@ -29,7 +38,6 @@ services:
 
   kittygram_frontend:
     container_name: frontend
-    env_file: .env
     image: rockur/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
@@ -37,7 +45,6 @@ services:
 
   kittygram_gateway:
     container_name: gateway
-    env_file: .env
     image: rockur/kittygram_gateway
     volumes:
       - static:/static
