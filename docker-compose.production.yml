@@ -6,11 +6,13 @@ volumes:
 services:
   db:
     container_name: db
+    env_file: .env
     image: postgres:13.10
     volumes:
       - pg_data:/var/lib/postgresql/data
 
   backend:
+    env_file: .env
     image: rockur/kittygram_backend
     volumes:
       - static:/static
@@ -19,12 +21,14 @@ services:
       - db
 
   frontend:
+    env_file: .env
     image: rockur/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
 
   gateway:
+    env_file: .env
     image: rockur/kittygram_gateway
     volumes:
       - static:/static
