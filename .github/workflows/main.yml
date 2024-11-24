@@ -180,13 +180,12 @@ jobs:
         
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
-      env:
-        ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
         script: |
           cd kittygram
 
