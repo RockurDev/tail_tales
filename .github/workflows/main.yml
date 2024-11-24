@@ -185,7 +185,6 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
         script: |
           cd kittygram
 

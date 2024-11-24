@@ -180,8 +180,6 @@ jobs:
         
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
-      env:
-        ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
