@@ -193,8 +193,7 @@ jobs:
           sudo docker compose -f docker-compose.production.yml up -d
 
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /static/static/
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
 
   send_message:
     runs-on: ubuntu-latest
@@ -205,4 +204,8 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Деплой успешно выполнен!
+        message: |
+          Деплой успешно выполнен!
+          Автор: (github.actor)
+          Коммит: (github.event.head_commit.message)
+          Ссылка: https://github.com/${{ github.repository }}/commit/${{github.sha}}
