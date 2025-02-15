@@ -1,26 +1,103 @@
-#  Как работать с репозиторием финального задания
+# Platform for pet lovers to share their furry friends
 
-## Что нужно сделать
+Social network for sharing pet photos. Users have full management of their pet profiles: registration, uploading, editing, and browsing. The project consists of a Django backend and a React frontend, deployed on a server with full CI/CD automation.
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+## Features
+- User authentication and registration
+- Pet profile creation and editing
+- Viewing other users' pet profiles
+- File upload for pet images
+- Secure API with authentication and permissions
 
-## Как проверить работу с помощью автотестов
+## Tech Stack
+- **Backend:** Django, Django REST Framework, Djoser, PostgreSQL
+- **Frontend:** React
+- **CI/CD:** GitHub Actions, Docker, Docker Compose
+- **Deployment:** Nginx, Gunicorn
+- **Testing:** PyTest
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
+## Deployment Pipeline (CI/CD)
+The project includes an automated CI/CD pipeline:
+1. Run frontend and backend tests
+2. Build and push images to Docker Hub
+3. Deploy to the server
+4. Send a success notification to Telegram
+
+## Running Tests Locally
+To run tests locally:
+1. Create a virtual environment:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r backend/requirements.txt
+   ```
+3. Run tests:
+   ```bash
+   pytest
+   ```
+
+## Docker Compose Configuration
 ```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+volumes:
+  static:
+  media:
+  pg_data:
+
+services:
+  db:
+    container_name: db
+    env_file: .env
+    image: postgres:13.10
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    env_file: .env
+    image: rockur/kittygram_backend
+    volumes:
+      - static:/static
+      - media:/app/media
+    depends_on:
+      - db
+
+  frontend:
+    env_file: .env
+    image: rockur/kittygram_frontend
+    command: cp -r /app/build/. /static/
+    volumes:
+      - static:/static
+
+  gateway:
+    env_file: .env
+    image: rockur/kittygram_gateway
+    volumes:
+      - static:/static
+      - media:/media
+    ports:
+      - 9000:80
+    depends_on:
+      - db
+      - backend
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+## Automated Testing
+To verify project functionality using automated tests:
+1. In the project root, create a `tests.yml` file with the following content:
+   ```yaml
+   repo_owner: your_github_username
+   kittygram_domain: https://kittygram-study.run.place
+   taski_domain: https://your_taski_project_url
+   dockerhub_username: your_dockerhub_username
+   ```
+2. Copy the contents of `.github/workflows/main.yml` to `kittygram_workflow.yml` in the root directory.
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+## Live Demo
+[Kittygram Live](https://kittygram-study.run.place)
 
-## Чек-лист для проверки перед отправкой задания
+## Author
+[GitHub Profile](https://github.com/RockurDev)  
+[Project Repository](https://github.com/RockurDev/kittygram/)
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
